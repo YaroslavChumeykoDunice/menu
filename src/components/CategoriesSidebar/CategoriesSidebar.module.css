@@ -1,0 +1,151 @@
+.wrapper {
+  width: 100%;
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin-bottom: 18px;
+
+  color: #2f2924;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  flex-shrink: 0;
+}
+
+.helperButtons {
+  padding-right: 16px;
+}
+
+.createButton {
+  width: 100%;
+  height: 54px;
+
+  margin-bottom: 18px;
+  margin-right: 16px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: #2f2924;
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+
+  flex-shrink: 0;
+}
+
+.createButton:hover {
+  opacity: 0.92;
+
+  transform: translateY(-1px);
+}
+
+.list {
+  margin-top: 12px;
+  flex: 1;
+
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  padding-right: 16px;
+}
+
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+
+  border-radius: 999px;
+}
+
+.categoryButton {
+  width: 100%;
+  min-height: 54px;
+
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 1px solid #e6dfd7;
+  border-radius: 16px;
+
+  background: white;
+
+  color: #433c35;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  flex-shrink: 0;
+}
+
+.categoryButton:hover {
+  transform: translateY(-1px);
+
+  border-color: #d4c8bc;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.active {
+  background: #4d5a37;
+
+  border-color: #4d5a37;
+
+  color: white;
+}
+
+.count {
+  min-width: 34px;
+  height: 28px;
+
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.06);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.active .count {
+  background: rgba(255, 255, 255, 0.18);
+
+  color: white;
+}

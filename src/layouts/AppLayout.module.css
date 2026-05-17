@@ -1,0 +1,21 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background: #f5f7fa;
+}
+
+.content {
+  flex: 1;
+
+  display: flex;
+
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+  }
+}

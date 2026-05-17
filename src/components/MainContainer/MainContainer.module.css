@@ -1,0 +1,17 @@
+.mainContainer {
+  flex: 1;
+
+  padding: 24px;
+
+  overflow-y: auto;
+}
+
+.placeholder {
+  border-radius: 16px;
+
+  background: white;
+
+  color: #64748b;
+
+  font-size: 18px;
+}

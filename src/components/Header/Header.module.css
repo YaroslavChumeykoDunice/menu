@@ -1,0 +1,90 @@
+.header {
+  height: 64px;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  border-bottom: 1px solid grey;
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.burgerButton {
+  width: 40px;
+  height: 40px;
+
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.burgerButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.burgerButton span {
+  width: 20px;
+  height: 2px;
+
+  margin: 0 auto;
+
+  border-radius: 999px;
+
+  background: white;
+}
+
+.logoBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .burgerButton {
+    display: flex;
+  }
+}
+
+.favoretis {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  border-color: gray;
+}
