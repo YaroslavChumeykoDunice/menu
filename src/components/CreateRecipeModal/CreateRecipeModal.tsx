@@ -1,14 +1,18 @@
 import { useState } from 'react';
 
-import { useForm } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+} from 'react-hook-form';
 
 import { supabase } from '../../lib/supabase';
 
 import styles from './CreateRecipeModal.module.css';
 
 import type { CreateMenuItemDto } from '../../store/menuStore';
-import { useCategoryStore } from '../../store/categoryStore';
 
+import { useCategoryStore } from '../../store/categoryStore';
+import { generateCategoryColor } from '../../utils/generateCategoryColor';
 
 interface FormValues {
   name: string;
@@ -17,7 +21,7 @@ interface FormValues {
 
   url: string;
 
-  category_id: number;
+  category_ids: number[];
 }
 
 interface Props {
@@ -26,7 +30,7 @@ interface Props {
   onClose: () => void;
 
   onSubmit: (
-    data: CreateMenuItemDto,
+    data: CreateMenuItemDto
   ) => Promise<void> | void;
 }
 
@@ -35,7 +39,9 @@ const CreateRecipeModal = ({
   onClose,
   onSubmit,
 }: Props) => {
-  const { categories } = useCategoryStore();
+  const { categories } =
+    useCategoryStore();
+
   const [isUploading, setIsUploading] =
     useState(false);
 
@@ -45,8 +51,12 @@ const CreateRecipeModal = ({
   const [previewUrl, setPreviewUrl] =
     useState('');
 
+  const [isOpenSelect, setIsOpenSelect] =
+    useState(false);
+
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -55,8 +65,7 @@ const CreateRecipeModal = ({
       name: '',
       recipe: '',
       url: '',
-      category_id:
-        categories[0]?.id ?? 1,
+      category_ids: [],
     },
   });
 
@@ -106,7 +115,6 @@ const CreateRecipeModal = ({
 
       await onSubmit({
         ...data,
-
         photo_url,
       });
 
@@ -157,6 +165,8 @@ const CreateRecipeModal = ({
             submitHandler
           )}
         >
+          {/* NAME */}
+
           <div className={styles.field}>
             <label>Название</label>
 
@@ -179,45 +189,157 @@ const CreateRecipeModal = ({
             )}
           </div>
 
+          {/* CATEGORIES */}
+
           <div className={styles.field}>
-            <label>Категория</label>
+            <label>Категории</label>
 
-            <select
-              {...register(
-                'category_id',
-                {
-                  required:
-                    'Выберите категорию',
+            <Controller
+              control={control}
+              name="category_ids"
+              rules={{
+                required: 'Выберите категории',
+              }}
+              render={({ field }) => {
+                const selectedCategories =
+                  categories.filter(category =>
+                    field.value.includes(
+                      category.id
+                    )
+                  );
 
-                  valueAsNumber: true,
-                }
-              )}
-              className={styles.select}
-            >
-              {categories.map(
-                category => (
-                  <option
-                    key={category.id}
-                    value={category.id}
+                return (
+                  <div
+                    className={
+                      styles.multiSelect
+                    }
                   >
-                    {category.name}
-                  </option>
-                )
-              )}
-            </select>
+                    {/* CONTROL */}
 
-            {errors.category_id && (
-              <span
-                className={styles.error}
-              >
-                {
-                  errors
-                    .category_id
-                    .message
-                }
+                    <div
+                      className={
+                        styles.selectControl
+                      }
+                      onClick={() =>
+                        setIsOpenSelect(
+                          prev => !prev
+                        )
+                      }
+                    >
+                      {!!selectedCategories.length ? (
+                        <div
+                          className={
+                            styles.chips
+                          }
+                        >
+                          {selectedCategories.map(
+                            category => (
+                              <div
+                                key={category.id}
+                                className={
+                                  styles.chip
+                                }
+                                style={{
+                                  backgroundColor:
+                                    generateCategoryColor(
+                                      category.name
+                                    ),
+                                }}
+                              >
+                                {
+                                  category.name
+                                }
+
+                                <button
+                                  type="button"
+                                  className={
+                                    styles.removeChip
+                                  }
+                                  onClick={e => {
+                                    e.stopPropagation();
+
+                                    field.onChange(
+                                      field.value.filter(
+                                        id =>
+                                          id !==
+                                          category.id
+                                      )
+                                    );
+                                  }}
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <span
+                          className={
+                            styles.placeholder
+                          }
+                        >
+                          Выберите категории
+                        </span>
+                      )}
+
+                      <div
+                        className={`${styles.arrow} ${isOpenSelect
+                            ? styles.arrowOpen
+                            : ''
+                          }`}
+                      >
+                        ▼
+                      </div>
+                    </div>
+
+                    {/* DROPDOWN */}
+
+                    {isOpenSelect && (
+                      <div
+                        className={
+                          styles.dropdown
+                        }
+                      >
+                        {categories
+                          .filter(
+                            category =>
+                              !field.value.includes(
+                                category.id
+                              )
+                          )
+                          .map(category => (
+                            <button
+                              key={category.id}
+                              type="button"
+                              className={
+                                styles.option
+                              }
+                              onClick={() => {
+                                field.onChange([
+                                  ...field.value,
+                                  category.id,
+                                ]);
+                              }}
+                            >
+                              {category.name}
+                            </button>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }}
+            />
+
+            {errors.category_ids && (
+              <span className={styles.error}>
+                {errors.category_ids.message}
               </span>
             )}
           </div>
+
+          {/* PHOTO */}
 
           <div className={styles.field}>
             <label>Фото</label>
@@ -255,6 +377,8 @@ const CreateRecipeModal = ({
             )}
           </div>
 
+          {/* URL */}
+
           <div className={styles.field}>
             <label>Ссылка</label>
 
@@ -262,6 +386,8 @@ const CreateRecipeModal = ({
               {...register('url')}
             />
           </div>
+
+          {/* RECIPE */}
 
           <div className={styles.field}>
             <label>Рецепт</label>

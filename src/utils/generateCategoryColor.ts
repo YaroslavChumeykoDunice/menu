@@ -14,7 +14,7 @@ export const generateCategoryColor = (category: string) => {
 
   let hash = 0;
 
-  for (let i = 0; i < category.length; i++) {
+  for (let i = 0; i < category?.length; i++) {
     hash = category.charCodeAt(i) + ((hash << 5) - hash);
   }
 

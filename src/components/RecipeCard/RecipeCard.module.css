@@ -191,6 +191,16 @@
   overflow-y: auto;
 
   padding-right: 4px;
+
+  flex: 1;
+
+  overflow-y: auto;
+
+  -webkit-overflow-scrolling: touch;
+
+  touch-action: pan-y;
+
+  overscroll-behavior: contain;
 }
 
 .recipeText::-webkit-scrollbar {
@@ -268,4 +278,12 @@
   box-shadow:
     0 0 12px rgba(255, 0, 0, 0.6),
     0 0 24px rgba(255, 0, 0, 0.35);
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-bottom: 12px;
 }

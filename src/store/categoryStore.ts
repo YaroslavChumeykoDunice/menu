@@ -12,11 +12,11 @@ interface CategoryStore {
     showFavorites: boolean;
     categories: Category[];
 
-    activeCategoryId: number | null;
+    activeCategoryIds: number[];
     isLoading: boolean;
 
     fetchCategories: () => Promise<void>;
-    setActiveCategoryId: (id: number | null) => void;
+    setActiveCategoryIds: (id: number[]) => void;
     setShowFavorites: () => void;
     addCategory: (
         name: string
@@ -27,7 +27,7 @@ export const useCategoryStore =
     create<CategoryStore>(set => ({
         categories: [],
 
-        activeCategoryId: null,
+        activeCategoryIds: [],
 
         isLoading: false,
 
@@ -63,8 +63,8 @@ export const useCategoryStore =
             }
         },
 
-        setActiveCategoryId: (id) => {
-            set({ activeCategoryId: id })
+        setActiveCategoryIds: (id) => {
+            set({ activeCategoryIds: id })
         },
 
         setShowFavorites: () => {

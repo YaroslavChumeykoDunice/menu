@@ -1,5 +1,5 @@
 
-import type { CreateMenuItemDto, MenuItem } from '../../store/menuStore';
+import type { MenuItem } from '../../store/menuStore';
 import CreateRecipeCard from '../CreateRecipeCard/CreateRecipeCard';
 import RecipeCard from '../RecipeCard/RecipeCard';
 import styles from './RecipeList.module.css';

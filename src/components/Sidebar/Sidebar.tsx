@@ -16,8 +16,8 @@ const Sidebar = ({ isOpen, onClose }: Props) => {
   const {
     categories,
     fetchCategories,
-    setActiveCategoryId,
-    activeCategoryId,
+    setActiveCategoryIds,
+    activeCategoryIds,
     addCategory,
   } = useCategoryStore();
 
@@ -52,10 +52,10 @@ const Sidebar = ({ isOpen, onClose }: Props) => {
 
         <CategoriesSidebar
           categories={categories}
-          activeCategoryId={
-            activeCategoryId
+          activeCategoryIds={
+            activeCategoryIds
           }
-          onSelect={setActiveCategoryId}
+          onSelect={setActiveCategoryIds}
           onCreateCategory={() =>
             setIsCreateCategoryOpen(true)
           }

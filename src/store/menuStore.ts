@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 import { supabase } from '../lib/supabase';
-import { mockMenuItems } from '../mocks';
 import type { Category } from './categoryStore';
 
 export interface MenuItem {
@@ -12,7 +11,7 @@ export interface MenuItem {
   recipe: string;
   favorites: boolean;
   photo_url: string;
-  category: Category | null;
+  categories: Category[];
 }
 
 export interface CreateMenuItemDto {
@@ -22,7 +21,7 @@ export interface CreateMenuItemDto {
   favorites?: boolean;
   photo_url: string;
 
-  category_id: number;
+  category_ids: number[];
 }
 
 interface MenuStore {
@@ -65,17 +64,31 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
           recipe,
           favorites,
           photo_url,
-          category (
-            id,
-            name
-          )
-        `).overrideTypes<MenuItem[]>();
+
+          categories:menu_categories(
+      category:category(
+        id,
+        name
+      )
+    )
+        `);
 
       if (error) {
         throw error;
       }
 
-      const sortedItems = data.sort(
+      const normalizedItems: MenuItem[] =
+        (data ?? []).map(item => ({
+          ...item,
+
+          categories:
+            item.categories.map(
+              (relation: any) =>
+                relation.category
+            ),
+        }));
+
+      const sortedItems = normalizedItems.sort(
         (a, b) =>
           new Date(b.created_at).getTime() -
           new Date(a.created_at).getTime()
@@ -105,37 +118,84 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
         error: null,
       });
 
+      // 1. создаём блюдо
+      const { data: menuItem, error: menuError } =
+        await supabase
+          .from('menu')
+          .insert({
+            name: dto.name,
+            url: dto.url,
+            recipe: dto.recipe,
+            favorites: dto.favorites ?? false,
+            photo_url: dto.photo_url,
+          })
+          .select()
+          .single();
+
+      if (menuError || !menuItem) {
+        throw menuError;
+      }
+
+      // 2. создаём связи категорий
+      if (dto.category_ids?.length) {
+        const relations = dto.category_ids.map(
+          categoryId => ({
+            menu_id: menuItem.id,
+            category_id: categoryId,
+          })
+        );
+
+        const { error: relationError } =
+          await supabase
+            .from('menu_categories')
+            .insert(relations);
+
+        if (relationError) {
+          throw relationError;
+        }
+      }
+
+      // 3. получаем готовый объект с категориями
       const { data, error } = await supabase
         .from('menu')
-        .insert({
-          name: dto.name,
-          url: dto.url,
-          recipe: dto.recipe,
-          favorites: dto.favorites ?? false,
-          photo_url: dto.photo_url,
-
-          category_id: dto.category_id,
-        })
         .select(`
-          id,
-          name,
-          url,
-          recipe,
-          favorites,
-          photo_url,
-          category (
-            id,
-            name
-          )
-        `)
-        .single().overrideTypes<MenuItem>();
+        id,
+        name,
+        created_at,
+        url,
+        recipe,
+        favorites,
+        photo_url,
+
+        categories:menu_categories(
+      category:category(
+        id,
+        name
+      )
+    )
+      `)
+        .eq('id', menuItem.id)
+        .single();
 
       if (error) {
         throw error;
       }
 
+      // 4. нормализуем
+      const normalizedItem: MenuItem = {
+        ...data,
+
+        categories: data.categories.map(
+          (item: any) => item.category
+        ),
+      };
+
+      // 5. обновляем store
       set({
-        items: [data, ...get().items],
+        items: [
+          normalizedItem,
+          ...get().items,
+        ],
       });
     } catch (error) {
       set({

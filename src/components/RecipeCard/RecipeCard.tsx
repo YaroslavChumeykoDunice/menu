@@ -1,26 +1,12 @@
 import { useState } from 'react';
 import styles from './RecipeCard.module.css';
 import { generateCategoryColor } from '../../utils/generateCategoryColor';
-import { useMenuStore } from '../../store/menuStore';
+import { useMenuStore, type MenuItem } from '../../store/menuStore';
 import UrlIcon from '../../icons/url.svg?react';
 
-interface Category {
-  id: number;
-  name: string;
-}
-
-export interface RecipeItem {
-  id: number;
-  name: string;
-  url: string;
-  recipe: string;
-  favorites: boolean;
-  photo_url: string;
-  category: Category | null;
-}
 
 interface Props {
-  item: RecipeItem;
+  item: MenuItem;
 }
 
 const RecipeCard = ({ item }: Props) => {
@@ -74,17 +60,22 @@ const RecipeCard = ({ item }: Props) => {
           </div>
 
           <div className={styles.content}>
-            {item.category && (
-                <span
-                  className={styles.category}
-                  style={{
-                    backgroundColor: generateCategoryColor(
-                      item.category.name
-                    ),
-                  }}
-                >
-                  {item.category.name}
-                </span>
+            {!!item.categories?.length && (
+              <div className={styles.categories}>
+                {item.categories.map(category => (
+                  <span
+                    key={category.id}
+                    className={styles.category}
+                    style={{
+                      backgroundColor: generateCategoryColor(
+                        category.name
+                      ),
+                    }}
+                  >
+                    {category.name}
+                  </span>
+                ))}
+              </div>
             )}
 
             <h3 className={styles.title}>{item.name}</h3>

@@ -209,33 +209,187 @@
   transform: translateY(-1px);
 }
 
-.select {
-  width: 100%;
+.multiSelect {
+  position: relative;
+}
 
-  height: 52px;
+.selectControl {
+  min-height: 56px;
 
-  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  border: 1px solid #ddd4cb;
-  border-radius: 14px;
+  gap: 12px;
 
-  background: #faf8f5;
+  padding: 10px 14px;
 
-  color: #2b2622;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
 
-  font-size: 15px;
-
-  outline: none;
+  background: white;
 
   cursor: pointer;
 
   transition:
     border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.selectControl:hover {
+  border-color: #d1d5db;
+}
+
+.selectControl:focus-within {
+  border-color: #ff5a5f;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(255, 90, 95, 0.12);
+}
+
+.placeholder {
+  color: #9ca3af;
+
+  font-size: 14px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  flex: 1;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  animation: chipIn 0.18s ease;
+}
+
+.removeChip {
+  border: none;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  color: white;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.15s ease,
     background 0.2s ease;
 }
 
-.select:focus {
-  border-color: #bdaea0;
+.removeChip:hover {
+  background: rgba(255, 255, 255, 0.35);
+
+  transform: scale(1.08);
+}
+
+.arrow {
+  color: #9ca3af;
+
+  font-size: 12px;
+
+  transition: transform 0.2s ease;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
 
   background: white;
+
+  border-radius: 18px;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  z-index: 100;
+
+  animation: dropdownIn 0.18s ease;
+}
+
+.option {
+  width: 100%;
+
+  padding: 14px 16px;
+
+  border: none;
+
+  background: white;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition:
+    background 0.15s ease,
+    padding-left 0.15s ease;
+}
+
+.option:hover {
+  background: #f9fafb;
+
+  padding-left: 20px;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chipIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

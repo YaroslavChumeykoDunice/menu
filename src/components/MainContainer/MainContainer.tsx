@@ -7,7 +7,7 @@ import { useCategoryStore } from '../../store/categoryStore';
 
 const MainContainer = () => {
   const { fetchItems, items } = useMenuStore()
-  const { activeCategoryId, showFavorites } = useCategoryStore();
+  const { activeCategoryIds, showFavorites } = useCategoryStore();
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -15,32 +15,36 @@ const MainContainer = () => {
   }, [])
 
   const filteredItems = items.filter(
-    item => {
-      const matchesSearch =
-        item.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
+  item => {
+    const matchesSearch =
+      item.name
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        );
+
+    const matchesCategory =
+      !activeCategoryIds.length
+        ? true
+        : item.categories.some(
+            category =>
+              activeCategoryIds.includes(
+                category.id
+              )
           );
 
-      const matchesCategory =
-        activeCategoryId === null
-          ? true
-          : item.category?.id ===
-          activeCategoryId;
+    const matchesFavorites =
+      showFavorites
+        ? item.favorites
+        : true;
 
-      const matchesFavorites =
-        showFavorites
-          ? item.favorites
-          : true;
-
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesFavorites
-      );
-    }
-  );
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesFavorites
+    );
+  }
+);
 
   return (
     <section className={styles.mainContainer}>
