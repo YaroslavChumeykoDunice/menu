@@ -23,8 +23,31 @@
   transform: rotateY(180deg);
 }
 
-.front,
 .back {
+  pointer-events: auto;
+
+  touch-action: pan-y;
+
+  position: absolute;
+
+  inset: 0;
+
+
+  border-radius: 20px;
+
+  background: #f6f3f0;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 10px 24px rgba(0, 0, 0, 0.04);
+
+  backface-visibility: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.front {
   position: absolute;
 
   inset: 0;
